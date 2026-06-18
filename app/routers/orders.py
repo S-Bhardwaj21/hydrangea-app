@@ -38,3 +38,11 @@ def read_order(order_id: str):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
+
+@router.delete("/{order_id}")
+def delete_order(order_id: str):
+    try:
+        order_services.delete_order(order_id)
+        return {"detail": "Order deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

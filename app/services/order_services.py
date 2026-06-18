@@ -42,3 +42,14 @@ def get_all_orders(status: str = None):
 def get_order_by_id(order_id: str):
     response = supabase.table("orders").select("*").eq("id", order_id).single().execute()
     return response.data
+
+def delete_order(order_id: str):
+    # Verify order exists and is in DRAFT
+    order = get_order_by_id(order_id)
+    if not order:
+        raise Exception("Order not found")
+    
+    if order['status'] != 'DRAFT':
+        raise Exception("Cannot delete order: Only DRAFT orders can be deleted.")
+        
+    return supabase.table("orders").delete().eq("id", order_id).execute()
