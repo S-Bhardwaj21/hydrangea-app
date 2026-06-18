@@ -32,3 +32,13 @@ def update_order_status(order_id: str, new_status: str):
 
     # 3. Update the database
     return supabase.table("orders").update({"status": new_status}).eq("id", order_id).execute()
+
+def get_all_orders(status: str = None):
+    query = supabase.table("orders").select("*")
+    if status:
+        query = query.eq("status", status)
+    return query.execute().data
+
+def get_order_by_id(order_id: str):
+    response = supabase.table("orders").select("*").eq("id", order_id).single().execute()
+    return response.data
