@@ -1,14 +1,11 @@
 from app.database import supabase
 from app.schemas.order import OrderCreate
+from app.exceptions import HydrangeaError
 
 def create_new_order(order_data: OrderCreate):
     # .model_dump() converts our Pydantic object to a standard Python dictionary
     # which Supabase expects.
     response = supabase.table("orders").insert(order_data.model_dump()).execute()
-    return response.data
-
-def get_all_orders():
-    response = supabase.table("orders").select("*").execute()
     return response.data
 
 def update_order_status(order_id: str, new_status: str):
@@ -50,6 +47,6 @@ def delete_order(order_id: str):
         raise Exception("Order not found")
     
     if order['status'] != 'DRAFT':
-        raise Exception("Cannot delete order: Only DRAFT orders can be deleted.")
+        raise HydrangeaError("Cannot delete order: Only DRAFT orders can be deleted.", 403)
         
     return supabase.table("orders").delete().eq("id", order_id).execute()

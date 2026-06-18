@@ -1,11 +1,12 @@
-from fastapi import FastAPI
-from app.routers import orders # Import your router
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from app.exceptions import HydrangeaError
 
-app = FastAPI(title="Hydrangea API")
+app = FastAPI()
 
-# Include the router
-app.include_router(orders.router, prefix="/orders", tags=["orders"])
-
-@app.get("/")
-def read_root():
-    return {"message": "Hydrangea API is operational"}
+@app.exception_handler(HydrangeaError)
+async def hydrangea_exception_handler(request: Request, exc: HydrangeaError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.message},
+    )
