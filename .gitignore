@@ -1,0 +1,21 @@
+# Secret Keys and Environment Files
+.env
+
+# Python Cache (these are the folders causing you errors)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Database (you don't want to sync this)
+hydrangea.db
+*.sqlite3
+
+# Virtual Environment (if you have one)
+venv/
+env/
+.venv/
+
+# IDE/Editor settings
+.vscode/
+.idea/
